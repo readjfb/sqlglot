@@ -5114,7 +5114,7 @@ class Parser(metaclass=_Parser):
     def _parse_unary(self) -> t.Optional[exp.Expression]:
         if self._match_set(self.UNARY_PARSERS):
             return self.UNARY_PARSERS[self._prev.token_type](self)
-        return self._parse_at_time_zone(self._parse_type())
+        return self._parse_format(self._parse_at_time_zone(self._parse_type()))
 
     def _parse_type(
         self, parse_interval: bool = True, fallback_to_identifier: bool = False
@@ -5473,6 +5473,28 @@ class Parser(metaclass=_Parser):
             return this
         return self.expression(exp.AtTimeZone, this=this, zone=self._parse_unary())
 
+    def _parse_format(self, this: t.Optional[exp.Expression]) -> t.Optional[exp.Expression]:
+        if not self._match(TokenType.L_PAREN, advance=False):
+            return this
+
+        index = self._index
+        self._match(TokenType.L_PAREN)
+
+        if not self._match(TokenType.FORMAT):
+            self._retreat(index)
+            return this
+
+        fmt = self._parse_string()
+        self._match_r_paren()
+
+        return self.expression(
+            exp.Cast,
+            this=this,
+            to=exp.DataType.build(exp.DataType.Type.UNKNOWN),
+            format=fmt,
+            format_brackets=True,
+        )
+
     def _parse_column(self) -> t.Optional[exp.Expression]:
         this = self._parse_column_reference()
         column = self._parse_column_ops(this) if this else self._parse_bracket(this)
@@ -5675,9 +5697,17 @@ class Parser(metaclass=_Parser):
                 or self._parse_primary()
             )
         else:
-            field = self._parse_primary() or self._parse_function(
-                anonymous=anonymous_func, any_token=any_token
-            )
+            if (
+                self._next
+                and self._next.token_type == TokenType.L_PAREN
+                and len(self._tokens) > self._index + 2
+                and self._tokens[self._index + 2].token_type == TokenType.FORMAT
+            ):
+                field = None
+            else:
+                field = self._parse_primary() or self._parse_function(
+                    anonymous=anonymous_func, any_token=any_token
+                )
         return field or self._parse_id_var(any_token=any_token, tokens=tokens)
 
     def _parse_function(

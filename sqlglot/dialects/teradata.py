@@ -275,8 +275,10 @@ class Teradata(Dialect):
 
         def cast_sql(self, expression: exp.Cast, safe_prefix: t.Optional[str] = None) -> str:
             if expression.to.this == exp.DataType.Type.UNKNOWN and expression.args.get("format"):
-                # We don't actually want to print the unknown type in CAST(<value> AS FORMAT <format>)
-                expression.to.pop()
+                if safe_prefix or not expression.args.get("format_brackets"):
+                    expression.to.pop()
+                    return super().cast_sql(expression, safe_prefix=safe_prefix)
+                return f"{self.sql(expression, 'this')} (FORMAT {self.sql(expression, 'format')})"
 
             return super().cast_sql(expression, safe_prefix=safe_prefix)
 

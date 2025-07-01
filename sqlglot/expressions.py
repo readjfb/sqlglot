@@ -5704,6 +5704,7 @@ class Cast(Func):
         "this": True,
         "to": True,
         "format": False,
+        "format_brackets": False,
         "safe": False,
         "action": False,
         "default": False,

@@ -321,3 +321,6 @@ class TestTeradata(Validator):
                 "teradata": "CAST(TO_CHAR(x, 'Q') AS INT)",
             },
         )
+
+    def test_format_override(self):
+        self.validate_identity("SELECT Col1 (FORMAT '+9999') FROM Test1")
