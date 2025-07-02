@@ -324,3 +324,9 @@ class TestTeradata(Validator):
 
     def test_format_override(self):
         self.validate_identity("SELECT Col1 (FORMAT '+9999') FROM Test1")
+
+    def test_cast_spacing(self):
+        self.validate_all(
+            "SELECT CAST (Col1 AS INTEGER) FROM Test1",
+            write={"teradata": "SELECT CAST(Col1 AS INT) FROM Test1"},
+        )
