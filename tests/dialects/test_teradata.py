@@ -232,10 +232,7 @@ class TestTeradata(Validator):
         )
 
     def test_format_override(self):
-        self.validate_identity(
-            "SELECT Col1 (FORMAT '+9999') FROM Test1",
-            "SELECT CAST(Col1 AS FORMAT '+9999') FROM Test1",
-        )
+        self.validate_identity("SELECT Col1 (FORMAT '+9999') FROM Test1")
         self.validate_identity(
             "SELECT CAST(Col1 AS INTEGER) FROM Test1",
             "SELECT CAST(Col1 AS INT) FROM Test1",

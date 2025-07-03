@@ -252,9 +252,8 @@ class Teradata(Dialect):
                     if not self._match(TokenType.R_PAREN):
                         self.raise_error("Expecting )")
                     this = self.expression(
-                        exp.Cast,
+                        exp.FormatColumn,
                         this=this,
-                        to=exp.DataType.build(exp.DataType.Type.UNKNOWN),
                         format=fmt,
                     )
                 else:

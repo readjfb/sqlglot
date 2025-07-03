@@ -5209,6 +5209,10 @@ class FromTimeZone(Expression):
     arg_types = {"this": True, "zone": True}
 
 
+class FormatColumn(Expression):
+    arg_types = {"this": True, "format": True}
+
+
 class Between(Predicate):
     arg_types = {"this": True, "low": True, "high": True}
 
