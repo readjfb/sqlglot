@@ -5210,6 +5210,14 @@ class FromTimeZone(Expression):
 
 
 class FormatColumn(Expression):
+    """Format override for a column in Teradata.
+
+    Teradata allows specifying a custom format string after a column using the
+    ``(FORMAT ...)`` clause as documented at
+    https://docs.teradata.com/r/Enterprise_IntelliFlex_VMware/SQL-Data-Types-and-Literals/Data-Type-Formats-and-Format-Phrases/FORMAT
+    .
+    """
+
     arg_types = {"this": True, "format": True}
 
 
