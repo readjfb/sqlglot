@@ -225,7 +225,7 @@ class Teradata(Dialect):
             optional_parens: bool = True,
             any_token: bool = False,
         ) -> t.Optional[exp.Expression]:
-            # Teradata uses a `(FORMAT ...)` clause after column references to
+            # Teradata uses a `(FORMAT <format_string>)` clause after column references to
             # override the output format. When we see this pattern we do not
             # parse it as a function call.  The syntax is documented at
             # https://docs.teradata.com/r/Enterprise_IntelliFlex_VMware/SQL-Data-Types-and-Literals/Data-Type-Formats-and-Format-Phrases/FORMAT
@@ -251,7 +251,7 @@ class Teradata(Dialect):
                 index = self._index
                 self._match(TokenType.L_PAREN)
                 if self._match(TokenType.FORMAT):
-                    # `(FORMAT ...)` after a column specifies a Teradata format
+                    # `(FORMAT <format_string>)` after a column specifies a Teradata format
                     # override. See
                     # https://docs.teradata.com/r/Enterprise_IntelliFlex_VMware/SQL-Data-Types-and-Literals/Data-Type-Formats-and-Format-Phrases/FORMAT
                     fmt_string = self._parse_string()

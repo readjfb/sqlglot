@@ -232,7 +232,7 @@ class TestTeradata(Validator):
         )
 
     def test_format_override(self):
-        # Teradata column format overrides use the `(FORMAT ...)` syntax.
+        # Teradata column format overrides use the `(FORMAT <format_string>)` syntax.
         # https://docs.teradata.com/r/Enterprise_IntelliFlex_VMware/SQL-Data-Types-and-Literals/Data-Type-Formats-and-Format-Phrases/FORMAT
         self.validate_identity("SELECT Col1 (FORMAT '+9999') FROM Test1")
         self.validate_identity("SELECT date_col (FORMAT 'YYYY-MM-DD') FROM t")
